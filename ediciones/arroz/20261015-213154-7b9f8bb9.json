@@ -1,0 +1,20 @@
+{
+  "id": "20261015-213154-7b9f8bb9",
+  "tipo": "ajuste",
+  "sistema_id": "arroz",
+  "usuario": "dhflorezm@gmail.com",
+  "fecha": "2026-10-15T21:31:54Z",
+  "justificacion": "prueba para que se vea",
+  "fuente": "ajustes 2",
+  "linea_base": "Finagro MRA (descarga 2026-10)",
+  "cambios": [
+    {
+      "slug": "arroz-riego-huila-tesalia-actualizado-300626",
+      "momento": "actualizado",
+      "campo": "rubro:Cosecha y beneficio",
+      "valor_base": 911028,
+      "valor_propuesto": 1000000,
+      "unidad": "COP por hectárea y ciclo"
+    }
+  ]
+}
