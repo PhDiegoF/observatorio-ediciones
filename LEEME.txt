@@ -1,0 +1,54 @@
+OBSERVATORIO DE COSTOS DE PRODUCCIÓN AGROPECUARIOS DE COLOMBIA (BETA)
+
+CARPETA
+  app.R                    app que une los tres módulos
+  tema_agrosavia.R         tema de marca (Brand book AGROSAVIA, feb. 2025)
+  mod_linea_base.R         consulta de la línea base (Finagro)
+  mod_edicion.R            ajuste y edición por usuarios expertos
+  almacen_ediciones.R      dónde se guardan los ajustes (carpeta local o GitHub)
+  mod_evidencia.R          evidencia científica y técnica (BAC, OpenAlex, AGRIS)
+  datos_linea_base/        sistemas.csv, guias.csv, rubros.csv, enlaces_contraste.csv
+  evidencia_salida/        salida de evidencia_03_unificar.R (3 CSV, versión del 15/10/2026)
+  www/logo_agrosavia.png   logo
+  ediciones_local/         se crea sola en las pruebas locales
+  preparar_despliegue.R    revisa los archivos y genera manifest.json para Connect Cloud
+  .gitignore               evita subir ediciones_local/ y archivos de sesión
+
+PAQUETES
+  install.packages(c("shiny","bslib","dplyr","tidyr","tibble","readr","stringr",
+                     "ggplot2","scales","DT","htmltools","jsonlite","httr2"))
+
+PROBAR EN TU EQUIPO
+  Abre app.R en RStudio y pulsa "Run App". Sin variables de entorno, los ajustes van a
+  ediciones_local/ (sirve para probar; no persiste en Posit Connect Cloud).
+
+GUARDAR LOS AJUSTES EN GITHUB (para que persistan)
+  1. Crea un repositorio PRIVADO aparte, p. ej. observatorio-ediciones (no el de la app:
+     Connect Cloud vuelve a publicar la app con cada commit a su rama).
+  2. Crea un token de grano fino (GitHub > Settings > Developer settings > Fine-grained
+     tokens) con acceso SOLO a ese repositorio y permiso "Contents: Read and write".
+  3. En Posit Connect Cloud, sección Variables del contenido, agrega:
+       EDICIONES_REPO = tu-organizacion/observatorio-ediciones
+       GITHUB_PAT     = el token
+       EDICIONES_RAMA = main        (opcional)
+  4. Para probar desde tu equipo antes de publicar:
+       Sys.setenv(EDICIONES_REPO = "tu-organizacion/observatorio-ediciones", GITHUB_PAT = "...")
+       source("almacen_ediciones.R"); probar_almacen(almacen_desde_entorno())
+     Debe imprimir "¿Se leyó el que acabo de escribir? TRUE". Borra luego la carpeta
+     "ediciones/_prueba" del repositorio.
+  5. Renueva el token antes de que venza (máximo un año).
+
+PUBLICAR EN POSIT CONNECT CLOUD
+  1. Ejecuta preparar_despliegue.R (revisa los archivos y genera manifest.json).
+  2. Sube TODA la carpeta a un repositorio de GitHub (el de la app, distinto del de ediciones).
+  3. En Connect Cloud: Publish > Shiny > elige el repositorio, la rama y app.R.
+  4. Agrega las Variables del paso anterior (EDICIONES_REPO y GITHUB_PAT).
+  Para saber quién edita, comparte el contenido en modo PRIVADO con cuentas invitadas:
+  solo así el correo del visitante llega a la app (session$user).
+  Los repositorios privados en Connect Cloud requieren plan de pago; con plan gratuito el
+  repositorio de la app debe ser público (los datos de línea base y evidencia ya son públicos
+  en su origen; el repositorio de ediciones sí debe ser privado).
+
+DATOS DE LA LÍNEA BASE
+  Salen de mra_linea_base_preliminar.xlsx (extracción de los XLSX y PDF de Finagro).
+  64 guías de 18 sistemas; palma de aceite no tiene guía de Finagro.

@@ -1,0 +1,7 @@
+ediciones_local/
+.Rproj.user/
+.Rhistory
+.RData
+.Renviron
+.httr-oauth
+*.Rproj
