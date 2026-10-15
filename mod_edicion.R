@@ -120,7 +120,10 @@ mod_edicion_server <- function(id, sistema_id, datos, almacen) {
       req(input$guia, input$momento)
       d <- datos$rubros |> filter(slug == input$guia, momento == input$momento)
       orden <- unique(d$rubro)
+      # Se redondea la línea base (pesos enteros; 2 decimales si es menor a 1.000) para que la casilla
+      # muestre el mismo valor que la tabla y un valor sin tocar no cuente como cambio.
       d |> group_by(rubro) |> summarise(valor = sum(valor), unidad = first(unidad), .groups = "drop") |>
+        mutate(valor = ifelse(abs(valor) >= 1000, round(valor, 0), round(valor, 2))) |>
         arrange(match(rubro, orden))
     })
     params <- reactive({ params_guia(guia()) })
@@ -141,12 +144,14 @@ mod_edicion_server <- function(id, sistema_id, datos, almacen) {
       cab <- fluidRow(column(4, tags$b("Rubro")), column(3, tags$b("Línea base")),
                       column(2, tags$b("Ajuste vigente")), column(3, tags$b("Tu valor")))
       filas_r <- lapply(seq_len(nrow(rb)), function(i)
-        fluidRow(column(4, rb$rubro[i]), column(3, fmt_cop(rb$valor[i])),
-                 column(2, vigente_de(paste0("rubro:", rb$rubro[i]))),
+        fluidRow(column(4, tags$div(style = "padding-top:7px", rb$rubro[i])),
+                 column(3, tags$div(style = "padding-top:7px", fmt_cop(rb$valor[i]))),
+                 column(2, tags$div(style = "padding-top:7px", vigente_de(paste0("rubro:", rb$rubro[i])))),
                  column(3, numericInput(ns(paste0("r_", i)), NULL, value = rb$valor[i], min = 0))))
       filas_p <- lapply(seq_len(nrow(pr)), function(i)
-        fluidRow(column(4, pr$etiqueta[i]), column(3, if (is.na(pr$valor[i])) "—" else fmt_num(pr$valor[i], 2)),
-                 column(2, vigente_de(pr$campo[i])),
+        fluidRow(column(4, tags$div(style = "padding-top:7px", pr$etiqueta[i])),
+                 column(3, tags$div(style = "padding-top:7px", if (is.na(pr$valor[i])) "—" else fmt_num(pr$valor[i], 2))),
+                 column(2, tags$div(style = "padding-top:7px", vigente_de(pr$campo[i]))),
                  column(3, numericInput(ns(paste0("p_", i)), NULL, value = if (is.na(pr$valor[i])) NA else pr$valor[i], min = 0))))
       tagList(
         if (nrow(rb)) tagList(tags$h5(paste0("Rubros (", rb$unidad[1], ")")), cab, filas_r)
