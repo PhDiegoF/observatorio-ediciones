@@ -34,6 +34,12 @@ library(shiny); library(dplyr); library(tibble); library(DT)
 
 MIN_JUSTIFICACION <- 15
 
+# Las fechas se guardan en UTC; en pantalla se muestran en hora de Colombia
+fecha_local <- function(x) {
+  t <- as.POSIXct(x, format = "%Y-%m-%dT%H:%M:%SZ", tz = "UTC")
+  ifelse(is.na(t), as.character(x), format(t, "%Y-%m-%d %H:%M", tz = "America/Bogota"))
+}
+
 params_guia <- function(g) {
   if (g$grupo == "agrícola") {
     tibble(campo = c("param:produccion_t_ha_ciclo", "param:valor_jornal"),
@@ -224,18 +230,19 @@ mod_edicion_server <- function(id, sistema_id, datos, almacen) {
     output$tabla_ajustes <- renderDT({
       d <- ajustes_guia()
       if (!nrow(d)) d <- tabla_ajustes_vacia()
-      t <- d |> transmute(Fecha = sub("T", " ", substr(fecha, 1, 16)), Usuario = usuario, Momento = momento,
+      t <- d |> transmute(Fecha = fecha_local(fecha), Usuario = usuario, Momento = momento,
                           Campo = sub("^(rubro|param):", "", campo), `Línea base` = valor_base, Propuesto = valor_propuesto,
                           Confirmaciones = n_confirmaciones, Estado = estado(d), `Justificación` = justificacion,
                           Fuente = fuente)
       datatable(t, rownames = FALSE, options = list(pageLength = 8, scrollX = TRUE, order = list(list(0, "desc")),
-        language = list(search = "Buscar:", zeroRecords = "Aún no hay ajustes para esta guía",
+        language = list(search = "Buscar:", lengthMenu = "Mostrar _MENU_ registros", zeroRecords = "Aún no hay ajustes para esta guía",
                         info = "_START_ a _END_ de _TOTAL_", paginate = list(previous = "Anterior", `next` = "Siguiente")))) |>
         formatRound(c("Línea base", "Propuesto"), digits = 0, mark = ".", dec.mark = ",")
     })
     opciones_ajustes <- function(d) {
+      if (nrow(d) == 0) return(character(0))   # paste0() con un vector vacío devuelve 1 elemento y rompe setNames()
       d <- d |> group_by(ajuste_id, usuario, fecha) |> summarise(n = n(), .groups = "drop") |> arrange(desc(ajuste_id))
-      setNames(d$ajuste_id, paste0(sub("T", " ", substr(d$fecha, 1, 16)), " · ", d$usuario, " · ", d$n, " cambio(s)"))
+      setNames(d$ajuste_id, paste0(fecha_local(d$fecha), " · ", d$usuario, " · ", d$n, " cambio(s)"))
     }
     output$ui_confirmar <- renderUI({
       u <- usuario(); d <- ajustes_sistema() |> filter(!retirado)
