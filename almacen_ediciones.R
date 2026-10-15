@@ -104,6 +104,11 @@ almacen_github <- function(repo, token = Sys.getenv("GITHUB_PAT"), rama = "main"
                      content = jsonlite::base64_enc(charToRaw(enc2utf8(a_json(rec)))), branch = rama)
       r <- pedir(paste0("contents/", carpeta, "/", rec$sistema_id, "/", rec$id, ".json")) |>
         httr2::req_method("PUT") |> httr2::req_body_json(cuerpo) |> httr2::req_perform()
+      if (httr2::resp_status(r) == 404L)
+        stop("GitHub respondió 404: el token no ve el repositorio '", repo, "' o la rama '", rama,
+             "' no existe. Revisa EDICIONES_REPO, EDICIONES_RAMA y que el token tenga acceso a ese ",
+             "repositorio con permiso 'Contents: Read and write' (ver diagnosticar_github() en almacen_ediciones.R).",
+             call. = FALSE)
       if (!(httr2::resp_status(r) %in% c(200L, 201L))) falla(r, "No se pudo guardar el ajuste")
       invisible(rec$id)
     },
@@ -127,9 +132,47 @@ almacen_github <- function(repo, token = Sys.getenv("GITHUB_PAT"), rama = "main"
 }
 
 almacen_desde_entorno <- function(dir_local = "ediciones_local") {
-  repo <- Sys.getenv("EDICIONES_REPO"); tok <- Sys.getenv("GITHUB_PAT")
-  rama <- Sys.getenv("EDICIONES_RAMA", "main")
+  # trimws: un espacio o salto de línea pegado con el valor hace que GitHub responda 404
+  # (también se quitan comillas pegadas por error al inicio o al final del valor)
+  limpiar <- function(x) gsub("^[\"']+|[\"']+$", "", trimws(x))
+  repo <- limpiar(Sys.getenv("EDICIONES_REPO")); tok <- limpiar(Sys.getenv("GITHUB_PAT"))
+  rama <- limpiar(Sys.getenv("EDICIONES_RAMA", "main")); if (!nzchar(rama)) rama <- "main"
   if (nzchar(repo) && nzchar(tok)) almacen_github(repo, tok, rama) else almacen_local(dir_local)
+}
+
+# Diagnóstico de la conexión con GitHub: dice en qué paso falla y por qué.
+#   Sys.setenv(EDICIONES_REPO = "organizacion/repositorio", GITHUB_PAT = "el-token")
+#   source("almacen_ediciones.R"); diagnosticar_github()
+diagnosticar_github <- function(repo = Sys.getenv("EDICIONES_REPO"), token = Sys.getenv("GITHUB_PAT"),
+                                rama = Sys.getenv("EDICIONES_RAMA", "main")) {
+  repo <- trimws(repo); token <- trimws(token); rama <- trimws(rama); if (!nzchar(rama)) rama <- "main"
+  pedir <- function(ruta) httr2::request(paste0("https://api.github.com/", ruta)) |>
+    httr2::req_headers(Authorization = paste("Bearer", token), Accept = "application/vnd.github+json",
+                       `X-GitHub-Api-Version` = "2022-11-28", `User-Agent` = "observatorio-costos-agropecuarios") |>
+    httr2::req_error(is_error = function(r) FALSE) |> httr2::req_perform()
+  say <- function(...) message(...)
+  say("Repositorio: [", repo, "]  Rama: [", rama, "]  Token: ", if (nzchar(token)) paste0(nchar(token), " caracteres") else "VACÍO")
+  r <- pedir("user"); s <- httr2::resp_status(r)
+  if (s == 200L) say("1. Token válido (usuario: ", httr2::resp_body_json(r)$login, ").")
+  else { say("1. FALLA (", s, "): el token no es válido o venció. Crea uno nuevo y pégalo sin espacios."); return(invisible(FALSE)) }
+  r <- pedir(paste0("repos/", repo)); s <- httr2::resp_status(r)
+  if (s == 200L) {
+    b <- httr2::resp_body_json(r)
+    say("2. El token ve el repositorio (privado: ", b$private, "; puede escribir: ", isTRUE(b$permissions$push), ").")
+    if (!isTRUE(b$permissions$push)) say("   OJO: no tiene permiso de escritura. Revisa 'Contents: Read and write'.")
+  } else {
+    say("2. FALLA (", s, "): el token NO ve el repositorio. Causas típicas: (a) el nombre está mal escrito ",
+        "(debe ser organizacion/repositorio, sin espacios); (b) el token se creó con 'Resource owner' = tu cuenta ",
+        "personal y el repositorio es de una organización: créalo de nuevo eligiendo la organización como dueña; ",
+        "(c) el token no incluye este repositorio en 'Repository access'; (d) la organización exige aprobar los tokens.")
+    return(invisible(FALSE))
+  }
+  r <- pedir(paste0("repos/", repo, "/branches/", rama)); s <- httr2::resp_status(r)
+  if (s == 200L) say("3. La rama '", rama, "' existe.")
+  else { say("3. FALLA (", s, "): la rama '", rama, "' no existe. Si el repositorio está vacío, crea un archivo ",
+             "(p. ej. un README) desde la web de GitHub y revisa el nombre de la rama."); return(invisible(FALSE)) }
+  say("Todo en orden. Ahora prueba: probar_almacen(almacen_desde_entorno())")
+  invisible(TRUE)
 }
 
 # Prueba de conexión: escribe y lee un registro de prueba (sistema "_prueba").
