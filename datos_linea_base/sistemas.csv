@@ -1,0 +1,20 @@
+sistema_id,sistema,sistema_evidencia,grupo,n_guias,n_con_rubros,anio_datos_min,anio_datos_max,anio_mas_reciente,grado_completitud,observacion
+arroz,Arroz,arroz,agrícola,1,1,2017.0,2017.0,2025.0,Media,"Una sola guía (Huila, Tesalia), con datos de 2017"
+leche,Leche,leche/lechería,pecuario,7,2,2017.0,2021.0,2021.0,Media,Guías de 2017 a 2021 en PDF; una guía de queso no es comparable con el litro de leche
+ceba,Ganadería de ceba,ganadería de ceba,pecuario,5,0,2017.0,2025.0,2025.0,Media,Guías de 2017 a 2018 y una de 2025; el costo incluye la compra del ternero
+papa,Papa,papa,agrícola,7,7,2017.0,2023.0,2025.0,Alta,
+tomate,Tomate,tomate,agrícola,7,7,2017.0,2021.0,2025.0,Alta,
+cana_panelera,Caña panelera,caña panelera,agrícola,6,6,2017.0,2021.0,2025.0,Alta,
+naranja,Naranja y cítricos,naranja/cítricos,agrícola,3,3,2020.0,2024.0,2026.0,Alta,
+yuca,Yuca,yuca,agrícola,2,2,2017.0,2019.0,2025.0,Media,
+frijol,Fríjol,fríjol,agrícola,5,5,2017.0,2022.0,2025.0,Alta,
+cebolla_bulbo,Cebolla de bulbo,cebolla,agrícola,2,2,2017.0,2021.0,2025.0,Media,
+cebolla_junca,Cebolla junca (cebollín),cebolla,agrícola,1,1,2017.0,2017.0,2025.0,Media,Cebollín común de Norte de Santander; falta confirmar la equivalencia con cebolla junca
+pina,Piña,piña,agrícola,2,2,2017.0,2018.0,2025.0,Media,
+palma,Palma de aceite,palma de aceite,agrícola,0,0,,,,Sin datos propios,Sin agroguía de Finagro; se cubrirá con Fedepalma y Cenipalma
+cafe,Café,café,agrícola,9,9,2018.0,2019.0,2025.0,Alta,
+banano,Banano,banano/plátano,agrícola,3,3,2018.0,2020.0,2025.0,Alta,
+aguacate,Aguacate,aguacate,agrícola,6,6,2017.0,2021.0,2026.0,Alta,
+cacao,Cacao,cacao,agrícola,10,10,2017.0,2023.0,2026.0,Alta,
+pollo,Pollo de engorde,pollo/avícola,pecuario,6,3,2017.0,2018.0,2018.0,Media,
+tilapia,Tilapia,tilapia/acuicultura,pecuario,6,1,2018.0,2025.0,2025.0,Media,

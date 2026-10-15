@@ -1,0 +1,19 @@
+sistema,documentos_directos,prioridad_A_directos,con_costo_explicito,contexto_bovino,en_BAC,en_AGRIS,anio_mas_reciente,nivel_evidencia
+papa,230,59,80,0,144,21,2026,alto
+leche/lechería,221,76,79,392,74,19,2026,alto
+café,221,73,72,0,15,9,2026,alto
+palma de aceite,210,72,56,0,18,124,2026,alto
+arroz,130,35,54,0,45,9,2026,alto
+caña panelera,166,47,53,0,81,1,2026,alto
+pollo/avícola,101,21,40,0,25,18,2026,alto
+fríjol,107,19,39,0,62,10,2026,alto
+banano/plátano,166,29,38,0,101,4,2026,alto
+cacao,178,31,32,0,101,8,2026,alto
+tomate,81,19,28,0,48,8,2025,medio
+tilapia/acuicultura,93,23,26,0,7,14,2026,medio
+aguacate,77,22,24,0,16,3,2026,medio
+yuca,80,26,24,0,29,5,2026,medio
+naranja/cítricos,74,20,18,0,40,3,2024,medio
+cebolla,54,7,14,0,35,6,2026,bajo
+ganadería de ceba,58,13,13,454,42,3,2026,bajo
+piña,17,5,7,0,4,1,2026,bajo
