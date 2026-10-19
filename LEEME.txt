@@ -3,13 +3,17 @@ OBSERVATORIO DE COSTOS DE PRODUCCIÓN AGROPECUARIOS DE COLOMBIA (BETA)
 CARPETA
   app.R                    app que une los tres módulos
   tema_agrosavia.R         tema de marca (Brand book AGROSAVIA, feb. 2025)
+  identidad_diydct.R       logo del DIyDCT, créditos de autoría y doña Violeta (guía para productores)
   mod_linea_base.R         consulta de la línea base (Finagro)
   mod_edicion.R            ajuste y edición por usuarios expertos
   almacen_ediciones.R      dónde se guardan los ajustes (carpeta local o GitHub)
   mod_evidencia.R          evidencia científica y técnica (BAC, OpenAlex, AGRIS)
-  datos_linea_base/        sistemas.csv, guias.csv, rubros.csv, enlaces_contraste.csv
+  datos_linea_base/        sistemas.csv, guias.csv, rubros.csv (Finagro);
+                           enlaces_contraste.csv (otras fuentes, licencia y permiso);
+                           cifras_referencia.csv (referencia sectorial de palma)
   evidencia_salida/        salida de evidencia_03_unificar.R (3 CSV, versión del 15/10/2026)
-  www/logo_agrosavia.png   logo
+  www/                     logo_agrosavia.png, logo_diydct.png, favicon.png y violeta_*.png
+                           (doña Violeta, del documento «Personajes del Departamento IyDCT»)
   ediciones_local/         se crea sola en las pruebas locales
   preparar_despliegue.R    revisa los archivos y genera manifest.json para Connect Cloud
   .gitignore               evita subir ediciones_local/ y archivos de sesión
@@ -51,4 +55,26 @@ PUBLICAR EN POSIT CONNECT CLOUD
 
 DATOS DE LA LÍNEA BASE
   Salen de mra_linea_base_preliminar.xlsx (extracción de los XLSX y PDF de Finagro).
-  64 guías de 18 sistemas; palma de aceite no tiene guía de Finagro.
+  88 guías de 18 sistemas; palma de aceite no tiene guía de Finagro.
+
+OTRAS FUENTES (versión del 16/10/2026)
+  enlaces_contraste.csv: una fila por fuente y sistema (UPRA como segunda fuente, Fedegán, Fedearroz,
+  FNC, agri benchmark, MinAgricultura). Columnas: entidad, tipo, etiqueta, titulo, anio_publicacion,
+  periodo_datos, formato, licencia, estado_permiso, nota, url. Cuando un titular autorice el uso,
+  cambia estado_permiso a "Autorizado (fecha)" y vuelve a publicar.
+  Las lecturas de esos documentos se hicieron con resúmenes automáticos: compara siempre con el original
+  antes de cargar una cifra a la línea base.
+  Los enlaces a la FNC apuntan solo a su página de inicio porque sus términos de uso lo exigen.
+  Las cifras de palma (cifras_referencia.csv) vienen de Cenipalma y Fedepalma, 2024 (CC BY-NC-ND 4.0
+  según la página del repositorio): se muestran tal cual, sin ajuste ni transformación.
+
+SISTEMAS NUEVOS (primera ola, "En preparación")
+  Plátano, ganadería de doble propósito, porcicultura, mora, arveja y pasifloras están en sistemas.csv
+  con grado "En preparación" y sin guías. Para cargar las guías de un sistema:
+  1. Agrega sus filas a guias.csv y rubros.csv con las mismas columnas que las de los otros sistemas
+     (una fila por guía en guias.csv; una por rubro y componente en rubros.csv).
+  2. Actualiza en sistemas.csv n_guias, n_con_rubros, anio_datos_min, anio_datos_max,
+     anio_mas_reciente y grado_completitud.
+  3. Si hay evidencia consolidada, escribe en sistema_evidencia el nombre exacto de
+     resumen_evidencia_por_sistema.csv; si no, déjalo vacío.
+  Revisa cada guía contra el original: algunas tienen subtotales que no suman.

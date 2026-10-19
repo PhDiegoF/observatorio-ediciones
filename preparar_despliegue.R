@@ -16,9 +16,9 @@ faltan <- setdiff(paquetes, rownames(installed.packages()))
 if (length(faltan)) install.packages(faltan)
 
 # 1. Archivos necesarios
-necesarios <- c("app.R", "tema_agrosavia.R", "almacen_ediciones.R", "mod_linea_base.R", "mod_edicion.R",
-                "mod_evidencia.R", "www/logo_agrosavia.png",
-                file.path("datos_linea_base", c("sistemas.csv", "guias.csv", "rubros.csv", "enlaces_contraste.csv")),
+necesarios <- c("app.R", "tema_agrosavia.R", "identidad_diydct.R", "almacen_ediciones.R", "mod_linea_base.R", "mod_edicion.R",
+                "mod_evidencia.R", file.path("www", c("logo_agrosavia.png", "logo_diydct.png", "favicon.png", paste0("violeta_", c("lupa", "duda", "saludo", "siembra", "sombrero"), ".png"))),
+                file.path("datos_linea_base", c("sistemas.csv", "guias.csv", "rubros.csv", "enlaces_contraste.csv", "cifras_referencia.csv")),
                 file.path("evidencia_salida", c("evidencia.csv", "evidencia_sistema.csv", "resumen_evidencia_por_sistema.csv")))
 ausentes <- necesarios[!file.exists(necesarios)]
 if (length(ausentes))

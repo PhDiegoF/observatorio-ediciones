@@ -11,10 +11,16 @@ frijol,Fríjol,fríjol,agrícola,5,5,2017.0,2022.0,2025.0,Alta,
 cebolla_bulbo,Cebolla de bulbo,cebolla,agrícola,2,2,2017.0,2021.0,2025.0,Media,
 cebolla_junca,Cebolla junca (cebollín),cebolla,agrícola,1,1,2017.0,2017.0,2025.0,Media,Cebollín común de Norte de Santander; falta confirmar la equivalencia con cebolla junca
 pina,Piña,piña,agrícola,2,2,2017.0,2018.0,2025.0,Media,
-palma,Palma de aceite,palma de aceite,agrícola,0,0,,,,Sin datos propios,Sin agroguía de Finagro; se cubrirá con Fedepalma y Cenipalma
+palma,Palma de aceite,palma de aceite,agrícola,0,0,,,,Sin datos propios,Finagro no publica agroguía de palma. Referencia sectorial: Cenipalma y Fedepalma (pestaña «Otras fuentes»)
 cafe,Café,café,agrícola,9,9,2018.0,2019.0,2025.0,Alta,
 banano,Banano,banano/plátano,agrícola,3,3,2018.0,2020.0,2025.0,Alta,
 aguacate,Aguacate,aguacate,agrícola,6,6,2017.0,2021.0,2026.0,Alta,
 cacao,Cacao,cacao,agrícola,10,10,2017.0,2023.0,2026.0,Alta,
 pollo,Pollo de engorde,pollo/avícola,pecuario,6,3,2017.0,2018.0,2018.0,Media,
 tilapia,Tilapia,tilapia/acuicultura,pecuario,6,1,2018.0,2025.0,2025.0,Media,
+platano,Plátano,banano/plátano,agrícola,0,0,,,,En preparación,Sistema nuevo (primera ola). Las guías de Finagro están por cargar; segunda fuente: UPRA (pestaña «Otras fuentes»)
+doble_proposito,Ganadería de doble propósito,,pecuario,0,0,,,,En preparación,Sistema nuevo (primera ola). Comparte parte de su información con leche y ceba. Las guías de Finagro están por cargar; segunda fuente: UPRA
+porcicultura,Porcicultura,,pecuario,0,0,,,,En preparación,Sistema nuevo (primera ola). Las guías de Finagro están por cargar; contraste: boletín porcino 2023 de MinAgricultura
+mora,Mora,,agrícola,0,0,,,,En preparación,Sistema nuevo (primera ola). La guía de Finagro está por cargar; segunda fuente: UPRA
+arveja,Arveja,,agrícola,0,0,,,,En preparación,Sistema nuevo (primera ola). Las guías de Finagro están por cargar; segunda fuente: UPRA
+pasifloras,Pasifloras (granadilla y maracuyá),,agrícola,0,0,,,,En preparación,Sistema nuevo (primera ola). Las guías de Finagro están por cargar; segunda fuente para granadilla: UPRA

@@ -2826,31 +2826,31 @@
         "Package": "xfun",
         "Type": "Package",
         "Title": "Supporting Functions for Packages Maintained by 'Yihui Xie'",
-        "Version": "0.61",
+        "Version": "0.62",
         "Authors@R": "c(\n  person(\"Yihui\", \"Xie\", role = c(\"aut\", \"cre\", \"cph\"), email = \"xie@yihui.name\", comment = c(ORCID = \"0000-0003-0645-5666\", URL = \"https://yihui.org\")),\n  person(\"Wush\", \"Wu\", role = \"ctb\"),\n  person(\"Daijiang\", \"Li\", role = \"ctb\"),\n  person(\"Xianying\", \"Tan\", role = \"ctb\"),\n  person(\"Salim\", \"Brüggemann\", role = \"ctb\", email = \"salim-b@pm.me\", comment = c(ORCID = \"0000-0002-5329-5987\")),\n  person(\"Christophe\", \"Dervieux\", role = \"ctb\"),\n  person()\n  )",
         "Description": "Miscellaneous functions commonly used in other packages maintained by 'Yihui Xie'.",
         "Depends": "R (>= 3.2.0)",
         "Imports": "grDevices, stats, tools",
-        "Suggests": "testit, parallel, codetools, methods, rstudioapi, tinytex (>=\n0.30), mime, litedown (>= 0.6), commonmark, knitr (>= 1.50),\nremotes, pak, curl, xml2, jsonlite, magick, yaml, data.table,\nqs2",
+        "Suggests": "testit, parallel, codetools, methods, rstudioapi, tinytex (>=\n0.30), mime, litedown (>= 0.6), knitr (>= 1.50), remotes, pak,\ncurl, xml2, jsonlite, magick, yaml, data.table, qs2",
         "License": "MIT + file LICENSE",
         "URL": "https://github.com/yihui/xfun",
         "BugReports": "https://github.com/yihui/xfun/issues",
         "Encoding": "UTF-8",
         "VignetteBuilder": "litedown",
-        "Config/roxygen2/version": "8.1.0",
+        "Config/roxygen2/version": "8.1.1",
         "NeedsCompilation": "yes",
-        "Packaged": "2026-09-16 17:36:20 UTC; yihui",
+        "Packaged": "2026-10-16 01:24:19 UTC; yihui",
         "Author": "Yihui Xie [aut, cre, cph] (ORCID:\n    <https://orcid.org/0000-0003-0645-5666>, URL: https://yihui.org),\n  Wush Wu [ctb],\n  Daijiang Li [ctb],\n  Xianying Tan [ctb],\n  Salim Brüggemann [ctb] (ORCID: <https://orcid.org/0000-0002-5329-5987>),\n  Christophe Dervieux [ctb]",
         "Maintainer": "Yihui Xie <xie@yihui.name>",
         "Repository": "CRAN",
-        "Date/Publication": "2026-09-16 18:30:02 UTC",
-        "Built": "R 4.6.1; x86_64-w64-mingw32; 2026-09-17 13:10:07 UTC; windows",
+        "Date/Publication": "2026-10-16 03:30:02 UTC",
+        "Built": "R 4.6.1; x86_64-w64-mingw32; 2026-10-16 19:33:24 UTC; windows",
         "Archs": "x64",
         "RemoteType": "standard",
         "RemotePkgRef": "xfun",
         "RemoteRef": "xfun",
         "RemoteRepos": "https://cran.rstudio.com",
-        "RemoteSha.Version": "0.61"
+        "RemoteSha.Version": "0.62"
       }
     },
     "xtable": {
@@ -2920,13 +2920,16 @@
   },
   "files": {
     "almacen_ediciones.R": {
-      "checksum": "adfd589054457e510c9889bafbb528d0"
+      "checksum": "314764ebf7df857cec0a53ba4366ddcb"
     },
     "app.R": {
-      "checksum": "20e7f58a2b88f0aadab4317cf6114c5f"
+      "checksum": "2f81ba223b69fe37c353b0df911a188e"
+    },
+    "datos_linea_base/cifras_referencia.csv": {
+      "checksum": "12b4478a003c963d4de07d7ed5118949"
     },
     "datos_linea_base/enlaces_contraste.csv": {
-      "checksum": "d473d847f18f274a499f0a54091487cd"
+      "checksum": "f22fca70a18bdb8f6ce91b5b2a5ecbf7"
     },
     "datos_linea_base/guias.csv": {
       "checksum": "2be9162e3c9b3975acbc2f434d3c0afb"
@@ -2935,7 +2938,10 @@
       "checksum": "464b92f07097bac7c520614f50319191"
     },
     "datos_linea_base/sistemas.csv": {
-      "checksum": "514a481c9ce13fb9486646fd6ac461d1"
+      "checksum": "014edfa9979e76efcd6bad63b85e17de"
+    },
+    "diagnostico_github.R": {
+      "checksum": "b7aaecf6ba3bb5efbfc57f1e56441734"
     },
     "evidencia_salida/evidencia.csv": {
       "checksum": "5528c429125439e162833d893bda8424"
@@ -2946,26 +2952,50 @@
     "evidencia_salida/resumen_evidencia_por_sistema.csv": {
       "checksum": "9f53911bacfdb6295466b6c97eee266a"
     },
+    "identidad_diydct.R": {
+      "checksum": "b802763df36489c92b6a6fd7cc0b21b5"
+    },
     "LEEME.txt": {
-      "checksum": "735c494d4d96c1644d246e8cec5319cc"
+      "checksum": "5df64b384fcf8ec0937851bc883527d5"
     },
     "mod_edicion.R": {
-      "checksum": "284a67de667e0fc961d2d9ef1bb877aa"
+      "checksum": "832f421378344e6e22a1176a9fd94ef2"
     },
     "mod_evidencia.R": {
       "checksum": "1035365690a9b507c483bb7d60cd4502"
     },
     "mod_linea_base.R": {
-      "checksum": "9f0a3b63e6d111aabf1b751f70f4d8cb"
+      "checksum": "b0976cb0dbd7379aa2a25a2a9309bf48"
     },
     "preparar_despliegue.R": {
-      "checksum": "d352f25ddf6adca20570b71dbb5a0701"
+      "checksum": "81226c3cedf44912260d9282e6a91204"
     },
     "tema_agrosavia.R": {
       "checksum": "658dc3466d7336d2a5f0c4dcf2e104ec"
     },
+    "www/favicon.png": {
+      "checksum": "59435a727ff2fd68fada428976ae89ed"
+    },
     "www/logo_agrosavia.png": {
       "checksum": "f29595b0e6333dc92e7c4260ebaf6859"
+    },
+    "www/logo_diydct.png": {
+      "checksum": "58f4f8291a3ee816ea627b23ae641efb"
+    },
+    "www/violeta_duda.png": {
+      "checksum": "269e4a494cab7224e6ffce967ce03a4c"
+    },
+    "www/violeta_lupa.png": {
+      "checksum": "a48232ee302d277804803c9d8e27f7c5"
+    },
+    "www/violeta_saludo.png": {
+      "checksum": "f0345b48c2e30be629e8888c2b2131bb"
+    },
+    "www/violeta_siembra.png": {
+      "checksum": "f0427260569b7b2e12012c851d404b90"
+    },
+    "www/violeta_sombrero.png": {
+      "checksum": "69e56e5659eb7f57adf57e874d3c4ab4"
     }
   },
   "users": null

@@ -37,7 +37,14 @@ cargar_linea_base <- function(dir = "datos_linea_base") {
   leer <- function(f) read_csv(file.path(dir, f), show_col_types = FALSE, progress = FALSE,
                                na = c("", "NA"), locale = locale(encoding = "UTF-8"))
   list(sistemas = leer("sistemas.csv"), guias = leer("guias.csv"), rubros = leer("rubros.csv"),
-       enlaces = leer("enlaces_contraste.csv"))
+       enlaces = leer("enlaces_contraste.csv"),
+       cifras  = if (file.exists(file.path(dir, "cifras_referencia.csv"))) leer("cifras_referencia.csv")
+                 else tibble(sistema_id = character()))
+}
+
+# Cita en APA de una fuente de contraste (fila de enlaces_contraste.csv)
+cita_fuente <- function(entidad, titulo, anio, url) {
+  paste0(entidad, ". (", ifelse(is.na(anio), "s. f.", anio), "). ", titulo, ". ", url)
 }
 
 # ---------------------------------------------------------------------
@@ -79,7 +86,15 @@ NOTA_COMPARABILIDAD <- list(
   "El margen se muestra sobre ventas, (precio − costo) / precio. Los XLSX de Finagro lo calculan sobre costos (utilidad / costo), por lo que se convierte.",
   "La ganadería de ceba incluye la compra del ternero y muestra su desglose cuando la guía lo trae.",
   "Las unidades de las guías pecuarias varían (litro, kg, kg en pie, ave, estanque). Compara solo guías de la misma unidad.",
-  "El detalle por ítem (precios y cantidades de cada insumo) es solo para aliados de la Red Nacional de MRA.")
+  "El detalle por ítem (precios y cantidades de cada insumo) es solo para aliados de la Red Nacional de MRA.",
+  "Las fuentes de la pestaña «Otras fuentes» no se mezclan con la línea base ni se ajustan. Sus alcances difieren: por ejemplo, UPRA incluye costos indirectos como administración y asistencia técnica, y en algunos casos el arrendamiento, que las guías de Finagro excluyen. Contrastar dos estimaciones no valida una con la otra.",
+  "Las fichas y boletines de UPRA son PDF con 4 a 5 casos modales por región y algunos tienen errores internos; revisa siempre el documento original.")
+
+NOTA_USO_FUENTES <- paste0(
+  "El Observatorio es una herramienta de investigación de AGROSAVIA, sin fines comerciales. ",
+  "Las cifras de otras fuentes se enlazan o se muestran tal como las publica su titular, con su cita, y cada fuente conserva su licencia. ",
+  "La columna «Permiso de uso» indica si se solicitó o se recibió autorización del titular. ",
+  "Si eres titular de una fuente y quieres que se corrija o se retire una referencia, avisa al equipo del Observatorio.")
 
 # ---------------------------------------------------------------------
 # Interfaz
@@ -101,6 +116,7 @@ mod_linea_base_ui <- function(id) {
       tabPanel("Comparar", br(),
         fluidRow(column(5, uiOutput(ns("ui_medida")))),
         plotOutput(ns("grafico_comparar"), height = "430px")),
+      tabPanel("Otras fuentes", br(), uiOutput(ns("otras_fuentes"))),
       tabPanel("Notas y límites", br(), uiOutput(ns("notas")))),
     tags$hr(),
     tags$p(class = "ev-nota", tags$b("Cómo citar: "), CITA_FINAGRO))
@@ -133,11 +149,46 @@ mod_linea_base_server <- function(id, sistema_id, datos, ajustes = reactive(tabl
             paste0(s$anio_datos_min, if (s$anio_datos_max != s$anio_datos_min) paste0("–", s$anio_datos_max) else "")),
             "año de los datos originales")),
         if (!is.na(s$observacion) && nzchar(s$observacion)) tags$p(style = "margin:8px 0 0", s$observacion),
-        if (s$n_guias == 0) tags$p(style = "margin:8px 0 0",
-          "Este sistema no tiene agroguía de Finagro. Se cubrirá con los datos de Fedepalma y Cenipalma."),
-        if (nrow(enl)) tags$p(class = "ev-nota", style = "margin:8px 0 0", "Para contrastar: ",
-          tagList(lapply(seq_len(nrow(enl)), function(i)
-            tagList(tags$a(href = enl$url[i], target = "_blank", rel = "noopener noreferrer", enl$etiqueta[i]), " ")))))
+        if (s$n_guias == 0 && (is.na(s$observacion) || !nzchar(s$observacion)))
+          tags$p(style = "margin:8px 0 0", "Este sistema todavía no tiene guías de Finagro cargadas."),
+        if (nrow(enl)) tags$p(class = "ev-nota", style = "margin:8px 0 0",
+          paste0(nrow(enl), if (nrow(enl) == 1) " fuente" else " fuentes"),
+          " para contrastar, con su licencia y estado de permiso, en la pestaña «Otras fuentes»."))
+    })
+
+    # ---- Otras fuentes: segunda fuente, contraste y referencia sectorial ----
+    output$otras_fuentes <- renderUI({
+      f <- datos$enlaces |> filter(sistema_id == sistema_id())
+      cif <- datos$cifras |> filter(sistema_id == sistema_id())
+      tagList(
+        if (nrow(cif)) tagList(
+          tags$h5(paste0("Referencia sectorial: ", cif$fuente[1], ", ", cif$anio[1])),
+          tags$div(class = "table-responsive",
+            tags$table(class = "table table-sm",
+              tags$thead(tags$tr(tags$th("Concepto"), tags$th("Especie o material"), tags$th("Valor"), tags$th("Unidad"))),
+              tags$tbody(lapply(seq_len(nrow(cif)), function(i) tags$tr(
+                tags$td(cif$concepto[i]), tags$td(tags$em(cif$especie[i])),
+                tags$td(style = "text-align:right", fmt_cop(cif$valor[i])), tags$td(cif$unidad[i])))))),
+          tags$p(class = "ev-nota", "Cifras tal como las publica el titular, sin ajuste. ",
+                 "Son de una muestra de productores de referencia y no equivalen a una agroguía de Finagro; ",
+                 "solo los totales por tonelada son comparables con otras fuentes. ", cif$nota[1], ".")),
+        if (nrow(f)) tagList(
+          tags$h5("Fuentes para contrastar"),
+          tags$div(class = "table-responsive",
+            tags$table(class = "table table-sm",
+              tags$thead(tags$tr(tags$th("Fuente"), tags$th("Tipo"), tags$th("Datos"), tags$th("Formato"),
+                                 tags$th("Licencia"), tags$th("Permiso de uso"))),
+              tags$tbody(lapply(seq_len(nrow(f)), function(i) tags$tr(
+                tags$td(tags$a(href = f$url[i], target = "_blank", rel = "noopener noreferrer", f$etiqueta[i]),
+                        if (!is.na(f$nota[i])) tags$div(class = "ev-nota", f$nota[i])),
+                tags$td(f$tipo[i]), tags$td(coalesce(f$periodo_datos[i], "—")), tags$td(coalesce(f$formato[i], "—")),
+                tags$td(f$licencia[i]), tags$td(f$estado_permiso[i])))))),
+          tags$h5("Cómo citarlas"),
+          tags$ul(lapply(seq_len(nrow(f)), function(i)
+            tags$li(cita_fuente(f$entidad[i], coalesce(f$titulo[i], f$etiqueta[i]), f$anio_publicacion[i], f$url[i]))))),
+        if (!nrow(f) && !nrow(cif)) tags$p(class = "ev-nota",
+          "Para este sistema todavía no hay una segunda fuente verificada. El Observatorio no inventa cifras de contraste."),
+        tags$p(class = "ev-nota", NOTA_USO_FUENTES))
     })
 
     # ---- Guías ----
