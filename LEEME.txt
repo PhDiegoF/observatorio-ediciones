@@ -15,6 +15,7 @@ CARPETA
   www/                     logo_agrosavia.png, logo_diydct.png, favicon.png y violeta_*.png
                            (doña Violeta, del documento «Personajes del Departamento IyDCT»)
   ediciones_local/         se crea sola en las pruebas locales
+  verificar_enlaces.R      prueba desde tu equipo que abran los enlaces de otras fuentes (UPRA, etc.)
   preparar_despliegue.R    revisa los archivos y genera manifest.json para Connect Cloud
   .gitignore               evita subir ediciones_local/ y archivos de sesión
 

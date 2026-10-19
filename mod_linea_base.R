@@ -36,8 +36,10 @@ CITA_FINAGRO <- paste0("Finagro. (2026). Marcos de Referencia Agroeconómicos (M
 cargar_linea_base <- function(dir = "datos_linea_base") {
   leer <- function(f) read_csv(file.path(dir, f), show_col_types = FALSE, progress = FALSE,
                                na = c("", "NA"), locale = locale(encoding = "UTF-8"))
+  enlaces <- leer("enlaces_contraste.csv")
+  if (!"url_alterno" %in% names(enlaces)) enlaces$url_alterno <- NA_character_   # enlace de respaldo (opcional)
   list(sistemas = leer("sistemas.csv"), guias = leer("guias.csv"), rubros = leer("rubros.csv"),
-       enlaces = leer("enlaces_contraste.csv"),
+       enlaces = enlaces,
        cifras  = if (file.exists(file.path(dir, "cifras_referencia.csv"))) leer("cifras_referencia.csv")
                  else tibble(sistema_id = character()))
 }
@@ -180,6 +182,9 @@ mod_linea_base_server <- function(id, sistema_id, datos, ajustes = reactive(tabl
                                  tags$th("Licencia"), tags$th("Permiso de uso"))),
               tags$tbody(lapply(seq_len(nrow(f)), function(i) tags$tr(
                 tags$td(tags$a(href = f$url[i], target = "_blank", rel = "noopener noreferrer", f$etiqueta[i]),
+                        if (!is.na(f$url_alterno[i])) tagList(" · ",
+                          tags$a(href = f$url_alterno[i], target = "_blank", rel = "noopener noreferrer",
+                                 "si no abre, enlace alterno")),
                         if (!is.na(f$nota[i])) tags$div(class = "ev-nota", f$nota[i])),
                 tags$td(f$tipo[i]), tags$td(coalesce(f$periodo_datos[i], "—")), tags$td(coalesce(f$formato[i], "—")),
                 tags$td(f$licencia[i]), tags$td(f$estado_permiso[i])))))),
